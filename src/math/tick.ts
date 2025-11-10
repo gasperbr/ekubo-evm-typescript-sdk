@@ -1,4 +1,5 @@
 import { MAX_U256 } from "./constants";
+import msb from "./msb";
 
 export const MIN_TICK = -88722835 as const;
 export const MAX_TICK = 88722835 as const;
@@ -113,6 +114,64 @@ export function toSqrtRatio(tick: number): bigint {
           : (ratio >> 2n) << 2n;
 
   return ratio;
+}
+
+/**
+ * Converts a sqrt ratio (64.128 fixed point) to the closest tick
+ * @param sqrtRatio The sqrt ratio in 64.128 fixed point format
+ * @returns The tick corresponding to the sqrt ratio
+ */
+export function sqrtRatioToTick(sqrtRatio: bigint): number {
+  // Check if negative tick (high 128 bits are zero)
+  const negative = (sqrtRatio >> 128n) === 0n;
+
+  // Take reciprocal if negative
+  let x = negative ? MAX_U256 / sqrtRatio : sqrtRatio;
+
+  // Calculate MSB of high 128 bits
+  const xHigh = x >> 128n;
+  const msbHigh = BigInt(msb(xHigh));
+
+  // Shift x down
+  x = x >> (msbHigh + 1n);
+  let log2_unsigned = msbHigh << 64n;
+
+  // Iterative log2 calculation (port of assembly code)
+  for (let i = 63; i >= 42; i--) {
+    x = (x * x) >> 127n;
+    const is_high_nonzero = x >> 128n > 0n ? 1n : 0n;
+    log2_unsigned += is_high_nonzero << BigInt(i);
+    x = x >> is_high_nonzero;
+  }
+
+  // Convert log2 to tick using magic constant
+  // 25572630076711825471857579 == 2^64 / log2(sqrt(1.000001))
+  const LOG_BASE_TICK_SIZE_X128 = 25572630076711825471857579n;
+  const TICK_ADJUSTMENT = 112469616488610087266845472033458199637n;
+
+  const logBaseTickSizeX128 = (negative ? -1n : 1n) * BigInt(log2_unsigned) * LOG_BASE_TICK_SIZE_X128;
+
+  let tickLow: number;
+  let tickHigh: number;
+
+  if (negative) {
+    tickLow = Number((logBaseTickSizeX128 - TICK_ADJUSTMENT) >> 128n);
+    tickHigh = Number(logBaseTickSizeX128 >> 128n);
+  } else {
+    tickLow = Number(logBaseTickSizeX128 >> 128n);
+    tickHigh = Number((logBaseTickSizeX128 + TICK_ADJUSTMENT) >> 128n);
+  }
+
+  if (tickLow === tickHigh) {
+    return tickLow;
+  }
+
+  // Verify which tick is correct
+  if (toSqrtRatio(tickHigh) <= sqrtRatio) {
+    return tickHigh;
+  }
+
+  return tickLow;
 }
 
 const logBase = Math.log(1.0000005);

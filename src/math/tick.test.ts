@@ -5,6 +5,7 @@ import {
   MAX_TICK,
   MIN_SQRT_RATIO,
   MIN_TICK,
+  sqrtRatioToTick,
   toSqrtRatio,
 } from "./tick";
 
@@ -69,5 +70,57 @@ describe(approximateNumberOfTickSpacingsCrossed, () => {
         1000,
       ),
     ).toMatchInlineSnapshot(`706`);
+  });
+});
+
+describe(sqrtRatioToTick, () => {
+  describe("roundtrip conversions", () => {
+    it("min tick", () => {
+      const sqrtRatio = toSqrtRatio(MIN_TICK);
+      expect(sqrtRatioToTick(sqrtRatio)).toEqual(MIN_TICK);
+    });
+
+    it("max tick", () => {
+      const sqrtRatio = toSqrtRatio(MAX_TICK);
+      expect(sqrtRatioToTick(sqrtRatio)).toEqual(MAX_TICK);
+    });
+
+    it("tick 0", () => {
+      const sqrtRatio = toSqrtRatio(0);
+      expect(sqrtRatioToTick(sqrtRatio)).toEqual(0);
+    });
+
+    it("positive ticks", () => {
+      for (const tick of [1, 100, 1000, 10000, 100000, 1000000]) {
+        const sqrtRatio = toSqrtRatio(tick);
+        expect(sqrtRatioToTick(sqrtRatio)).toEqual(tick);
+      }
+    });
+
+    it("negative ticks", () => {
+      for (const tick of [-1, -100, -1000, -10000, -100000, -1000000]) {
+        const sqrtRatio = toSqrtRatio(tick);
+        expect(sqrtRatioToTick(sqrtRatio)).toEqual(tick);
+      }
+    });
+  });
+
+  it("returns closest tick for arbitrary sqrt ratios", () => {
+    // Test with MIN_SQRT_RATIO
+    expect(sqrtRatioToTick(MIN_SQRT_RATIO)).toEqual(MIN_TICK);
+
+    // Test with MAX_SQRT_RATIO
+    expect(sqrtRatioToTick(MAX_SQRT_RATIO)).toEqual(MAX_TICK);
+
+    // Test with 2^128 (tick 0)
+    expect(sqrtRatioToTick(1n << 128n)).toEqual(0);
+  });
+
+  it("reverses toSqrtRatio snapshots", () => {
+    // Use the exact sqrt ratios from toSqrtRatio snapshots
+    expect(sqrtRatioToTick(561030636129153856579134353873645338624n)).toEqual(1e6);
+    expect(sqrtRatioToTick(50502254805927926084423855178401471004672n)).toEqual(1e7);
+    expect(sqrtRatioToTick(206391740095027370700312310528859963392n)).toEqual(-1e6);
+    expect(sqrtRatioToTick(2292810285051363400276741630355046400n)).toEqual(-1e7);
   });
 });
