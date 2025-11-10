@@ -1,4 +1,4 @@
-import { toSqrtRatio } from "../math/tick";
+import { tickToSqrtRatio } from "../math/tick";
 import { OraclePool } from "./oraclePool";
 
 import { describe, expect, it } from "vitest";
@@ -17,7 +17,7 @@ describe("oraclePool", () => {
       const pool = new OraclePool({
         token0: 0n,
         token1: 1n,
-        sqrtRatio: toSqrtRatio(1),
+        sqrtRatio: tickToSqrtRatio(1),
         liquidity: 1000000000n,
         tick: 0,
         extension: 1n,

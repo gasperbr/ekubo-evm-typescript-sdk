@@ -12,7 +12,7 @@ const TWO_POW_160 = 1n << 160n;
 const TWO_POW_128 = 1n << 128n;
 const TWO_POW_96 = 1n << 96n;
 
-export function toSqrtRatio(tick: number): bigint {
+export function tickToSqrtRatio(tick: number): bigint {
   if (tick < MIN_TICK || tick > MAX_TICK)
     throw new Error(`Invalid tick: ${tick}`);
   let sign = tick < 0;
@@ -167,7 +167,7 @@ export function sqrtRatioToTick(sqrtRatio: bigint): number {
   }
 
   // Verify which tick is correct
-  if (toSqrtRatio(tickHigh) <= sqrtRatio) {
+  if (tickToSqrtRatio(tickHigh) <= sqrtRatio) {
     return tickHigh;
   }
 

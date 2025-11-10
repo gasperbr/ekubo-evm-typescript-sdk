@@ -12,7 +12,7 @@ import {
   MAX_TICK_SPACING,
   MIN_SQRT_RATIO,
   MIN_TICK,
-  toSqrtRatio,
+  tickToSqrtRatio,
   sqrtRatioToTick,
 } from "./math/tick";
 import { calculateNextSqrtRatio } from "./math/twamm";
@@ -25,7 +25,7 @@ export {
   nextSqrtRatioFromAmount0,
   nextSqrtRatioFromAmount1,
   computeStep,
-  toSqrtRatio,
+  tickToSqrtRatio,
   sqrtRatioToTick,
   calculateNextSqrtRatio,
   packSqrtRatio,

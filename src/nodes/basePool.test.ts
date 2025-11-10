@@ -1,5 +1,5 @@
 import { BasePool, findNearestInitializedTickIndex } from "./basePool";
-import { toSqrtRatio } from "../math/tick";
+import { tickToSqrtRatio } from "../math/tick";
 import { describe, expect, it } from "vitest";
 
 describe(findNearestInitializedTickIndex, () => {
@@ -137,7 +137,7 @@ describe(BasePool, () => {
           { tick: 1, liquidityDelta: -1000000000n },
         ],
         liquidity: 0n,
-        sqrtRatio: toSqrtRatio(1),
+        sqrtRatio: tickToSqrtRatio(1),
       });
 
       const { executionResources, calculatedAmount } = pool.quote({

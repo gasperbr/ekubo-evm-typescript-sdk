@@ -6,31 +6,31 @@ import {
   MIN_SQRT_RATIO,
   MIN_TICK,
   sqrtRatioToTick,
-  toSqrtRatio,
+  tickToSqrtRatio,
 } from "./tick";
 
-describe(toSqrtRatio, () => {
+describe(tickToSqrtRatio, () => {
   it("min tick", () => {
-    expect(toSqrtRatio(MIN_TICK)).toEqual(MIN_SQRT_RATIO);
+    expect(tickToSqrtRatio(MIN_TICK)).toEqual(MIN_SQRT_RATIO);
   });
   it("max tick", () => {
-    expect(toSqrtRatio(MAX_TICK)).toEqual(MAX_SQRT_RATIO);
+    expect(tickToSqrtRatio(MAX_TICK)).toEqual(MAX_SQRT_RATIO);
   });
   it("zero", () => {
-    expect(toSqrtRatio(0)).toEqual(1n << 128n);
+    expect(tickToSqrtRatio(0)).toEqual(1n << 128n);
   });
 
   it("snapshots", () => {
-    expect(toSqrtRatio(1e6)).toMatchInlineSnapshot(
+    expect(tickToSqrtRatio(1e6)).toMatchInlineSnapshot(
       `561030636129153856579134353873645338624n`,
     );
-    expect(toSqrtRatio(1e7)).toMatchInlineSnapshot(
+    expect(tickToSqrtRatio(1e7)).toMatchInlineSnapshot(
       `50502254805927926084423855178401471004672n`,
     );
-    expect(toSqrtRatio(-1e6)).toMatchInlineSnapshot(
+    expect(tickToSqrtRatio(-1e6)).toMatchInlineSnapshot(
       `206391740095027370700312310528859963392n`,
     );
-    expect(toSqrtRatio(-1e7)).toMatchInlineSnapshot(
+    expect(tickToSqrtRatio(-1e7)).toMatchInlineSnapshot(
       `2292810285051363400276741630355046400n`,
     );
   });
@@ -76,30 +76,30 @@ describe(approximateNumberOfTickSpacingsCrossed, () => {
 describe(sqrtRatioToTick, () => {
   describe("roundtrip conversions", () => {
     it("min tick", () => {
-      const sqrtRatio = toSqrtRatio(MIN_TICK);
+      const sqrtRatio = tickToSqrtRatio(MIN_TICK);
       expect(sqrtRatioToTick(sqrtRatio)).toEqual(MIN_TICK);
     });
 
     it("max tick", () => {
-      const sqrtRatio = toSqrtRatio(MAX_TICK);
+      const sqrtRatio = tickToSqrtRatio(MAX_TICK);
       expect(sqrtRatioToTick(sqrtRatio)).toEqual(MAX_TICK);
     });
 
     it("tick 0", () => {
-      const sqrtRatio = toSqrtRatio(0);
+      const sqrtRatio = tickToSqrtRatio(0);
       expect(sqrtRatioToTick(sqrtRatio)).toEqual(0);
     });
 
     it("positive ticks", () => {
       for (const tick of [1, 100, 1000, 10000, 100000, 1000000]) {
-        const sqrtRatio = toSqrtRatio(tick);
+        const sqrtRatio = tickToSqrtRatio(tick);
         expect(sqrtRatioToTick(sqrtRatio)).toEqual(tick);
       }
     });
 
     it("negative ticks", () => {
       for (const tick of [-1, -100, -1000, -10000, -100000, -1000000]) {
-        const sqrtRatio = toSqrtRatio(tick);
+        const sqrtRatio = tickToSqrtRatio(tick);
         expect(sqrtRatioToTick(sqrtRatio)).toEqual(tick);
       }
     });
@@ -116,8 +116,8 @@ describe(sqrtRatioToTick, () => {
     expect(sqrtRatioToTick(1n << 128n)).toEqual(0);
   });
 
-  it("reverses toSqrtRatio snapshots", () => {
-    // Use the exact sqrt ratios from toSqrtRatio snapshots
+  it("reverses tickToSqrtRatio snapshots", () => {
+    // Use the exact sqrt ratios from tickToSqrtRatio snapshots
     expect(sqrtRatioToTick(561030636129153856579134353873645338624n)).toEqual(1e6);
     expect(sqrtRatioToTick(50502254805927926084423855178401471004672n)).toEqual(1e7);
     expect(sqrtRatioToTick(206391740095027370700312310528859963392n)).toEqual(-1e6);

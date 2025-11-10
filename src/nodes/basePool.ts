@@ -3,7 +3,7 @@ import {
   approximateNumberOfTickSpacingsCrossed,
   MAX_SQRT_RATIO,
   MIN_SQRT_RATIO,
-  toSqrtRatio,
+  tickToSqrtRatio,
 } from "../math/tick";
 import {
   BasePoolResources,
@@ -171,7 +171,7 @@ export class BasePool implements QuoteNode {
           : this.sortedTicks[activeTickIndex]) ?? null;
 
       const nextInitializedTickSqrtRatio = nextInitializedTick
-        ? toSqrtRatio(nextInitializedTick.tick)
+        ? tickToSqrtRatio(nextInitializedTick.tick)
         : null;
 
       const stepSqrtRatioLimit =
