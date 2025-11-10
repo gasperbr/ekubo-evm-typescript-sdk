@@ -15,6 +15,7 @@ import {
   toSqrtRatio,
 } from "./math/tick";
 import { calculateNextSqrtRatio } from "./math/twamm";
+import { packSqrtRatio, unpackSqrtRatio } from "./math/packedSqrtRatio";
 
 export {
   amount0Delta,
@@ -25,6 +26,8 @@ export {
   computeStep,
   toSqrtRatio,
   calculateNextSqrtRatio,
+  packSqrtRatio,
+  unpackSqrtRatio,
   MAX_U128,
   MAX_U256,
   MIN_TICK,
