@@ -17,6 +17,10 @@ import {
 } from "./math/tick";
 import { calculateNextSqrtRatio } from "./math/twamm";
 import { packSqrtRatio, unpackSqrtRatio } from "./math/packedSqrtRatio";
+import {
+  tickToTokenRatio,
+  tokenRatioToClosestTick,
+} from "./math/priceConversions";
 
 export {
   amount0Delta,
@@ -27,6 +31,8 @@ export {
   computeStep,
   tickToSqrtRatio,
   sqrtRatioToTick,
+  tickToTokenRatio,
+  tokenRatioToClosestTick,
   calculateNextSqrtRatio,
   packSqrtRatio,
   unpackSqrtRatio,
