@@ -1,5 +1,11 @@
 import { MAX_U128, MAX_U256 } from "./math/constants";
 import { amount0Delta, amount1Delta } from "./math/delta";
+import {
+  getLiquidityForAmount0,
+  getLiquidityForAmount1,
+  getLiquidityForAmounts,
+  getAmountsForLiquidity,
+} from "./math/liquidity";
 import msb from "./math/msb";
 import {
   nextSqrtRatioFromAmount0,
@@ -19,6 +25,10 @@ import { calculateNextSqrtRatio } from "./math/twamm";
 export {
   amount0Delta,
   amount1Delta,
+  getLiquidityForAmount0,
+  getLiquidityForAmount1,
+  getLiquidityForAmounts,
+  getAmountsForLiquidity,
   msb,
   nextSqrtRatioFromAmount0,
   nextSqrtRatioFromAmount1,
